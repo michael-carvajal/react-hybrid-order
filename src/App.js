@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import './App.css';
 
 function App() {
-  const [vendor, setVendor] = useState('');
+  const [vendor, setVendor] = useState('ATD');
   const [itemNumber, setItemNumber] = useState('');
   const [poNumber, setPoNumber] = useState('');
   const [quantity, setQuantity] = useState('');
@@ -11,17 +11,19 @@ function App() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const response = await fetch('/run-automation', {
+    console.log(vendor, itemNumber, poNumber, quantity, pickup);
+    const storeNumber =  poNumber.split("-")[0];
+    const response = await fetch('http://127.0.0.1:5000/api/automation/run', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ vendor, itemNumber, poNumber, quantity, pickup }),
+      body: JSON.stringify({ vendor, storeNumber, itemNumber, poNumber, quantity, pickup }),
     });
     const data = await response.json();
     console.log(data);
   };
-
+console.log(vendor);
   return (
     <div className="container mt-5">
       <div className="card">
