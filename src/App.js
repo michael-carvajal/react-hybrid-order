@@ -23,7 +23,6 @@ function App() {
     const data = await response.json();
     console.log(data);
   };
-console.log(vendor);
   return (
     <div className="container mt-5">
       <div className="card">
