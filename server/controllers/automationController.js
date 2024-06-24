@@ -25,7 +25,6 @@ const runAutomation = async (req, res) => {
 
   let websiteUrl, username, password, response;
 
-  try {
     switch (vendor) {
       case 'ATD':
         websiteUrl = decryptedValues.ATD_URL;
@@ -81,12 +80,11 @@ const runAutomation = async (req, res) => {
       default:
         throw new Error('Invalid vendor');
     }
-    await browser.close();
+
+    setTimeout(() => {
+      console.log('waiting for next submission');  
+    }, 60000);
     res.json(response);
-  } catch (error) {
-    await browser.close();
-    res.status(500).json({ error: error.message });
-  }
 };
 
 module.exports = { runAutomation };

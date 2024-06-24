@@ -1,28 +1,56 @@
 // src/App.js
-import React, { useState } from 'react';
-import './App.css';
+import React, { useState } from "react";
+import "./App.css";
 
 function App() {
-  const [vendor, setVendor] = useState('ATD');
-  const [itemNumber, setItemNumber] = useState('');
-  const [poNumber, setPoNumber] = useState('');
-  const [quantity, setQuantity] = useState('');
+  const [vendor, setVendor] = useState("ATD");
+  const [itemNumber, setItemNumber] = useState("");
+  const [poNumber, setPoNumber] = useState("");
+  const [quantity, setQuantity] = useState("");
   const [pickup, setPickup] = useState(false);
+  const [error, setError] = useState([]);
+  const [confirmation, setConfirmation] = useState([]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setConfirmation([]);
+    setError([]);
     console.log(vendor, itemNumber, poNumber, quantity, pickup);
-    const storeNumber =  poNumber.split("-")[0];
-    const response = await fetch('http://127.0.0.1:5000/api/automation/run', {
-      method: 'POST',
+    const storeNumber = poNumber.split("-")[0];
+    const response = await fetch("http://localhost:5000/api/automation/run", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify({ vendor, storeNumber, itemNumber, poNumber, quantity, pickup }),
+      body: JSON.stringify({
+        vendor,
+        storeNumber,
+        itemNumber,
+        poNumber,
+        quantity,
+        pickup,
+      }),
     });
     const data = await response.json();
     console.log(data);
+    if (data.error) {
+      setError(data.error);
+    }else if (data.confirmation) {
+      setConfirmation(data.confirmation)
+    }
   };
+  const Error = (
+    <div>
+      <p>{error[0]}</p>
+    </div>
+  );
+  const Confirmation = (
+    <ul>
+      {confirmation.map((ele, key) => (
+        <li key={`confirmation-key-${key}`}>{ele}</li>
+      ))}
+    </ul>
+  );
   return (
     <div className="container mt-5">
       <div className="card">
@@ -30,9 +58,13 @@ function App() {
           <h3>Hybrid Order</h3>
         </div>
         <div className="card-body">
+          {error.length > 0 && Error}
+          {confirmation.length > 0 && Confirmation}
           <form onSubmit={handleSubmit}>
             <div className="mb-3">
-              <label htmlFor="vendor" className="form-label">Vendor</label>
+              <label htmlFor="vendor" className="form-label">
+                Vendor
+              </label>
               <select
                 className="form-select"
                 id="vendor"
@@ -47,7 +79,9 @@ function App() {
               </select>
             </div>
             <div className="mb-3">
-              <label htmlFor="itemNumber" className="form-label">Item Number</label>
+              <label htmlFor="itemNumber" className="form-label">
+                Item Number
+              </label>
               <input
                 type="text"
                 className="form-control"
@@ -57,7 +91,9 @@ function App() {
               />
             </div>
             <div className="mb-3">
-              <label htmlFor="poNumber" className="form-label">Store/PO Number</label>
+              <label htmlFor="poNumber" className="form-label">
+                Store/PO Number
+              </label>
               <input
                 type="text"
                 className="form-control"
@@ -67,7 +103,9 @@ function App() {
               />
             </div>
             <div className="mb-3">
-              <label htmlFor="quantity" className="form-label">Quantity</label>
+              <label htmlFor="quantity" className="form-label">
+                Quantity
+              </label>
               <input
                 type="text"
                 className="form-control"
@@ -84,9 +122,13 @@ function App() {
                 checked={pickup}
                 onChange={(e) => setPickup(e.target.checked)}
               />
-              <label className="form-check-label" htmlFor="pickup">Pick up</label>
+              <label className="form-check-label" htmlFor="pickup">
+                Pick up
+              </label>
             </div>
-            <button type="submit" className="btn btn-primary">Submit</button>
+            <button type="submit" className="btn btn-primary">
+              Submit
+            </button>
           </form>
         </div>
       </div>
