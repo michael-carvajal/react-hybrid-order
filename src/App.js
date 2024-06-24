@@ -8,12 +8,15 @@ function App() {
   const [poNumber, setPoNumber] = useState('');
   const [quantity, setQuantity] = useState('');
   const [pickup, setPickup] = useState(false);
+  const [error, setError] = useState([]);
+
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log(vendor, itemNumber, poNumber, quantity, pickup);
     const storeNumber =  poNumber.split("-")[0];
-    const response = await fetch('http://127.0.0.1:5000/api/automation/run', {
+    const response = await fetch('http://localhost:5000/api/automation/run', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -22,7 +25,15 @@ function App() {
     });
     const data = await response.json();
     console.log(data);
+    if (data.error) {
+      setError(data.error)
+    }
   };
+  const Error = (
+    <div>
+      <p>{error[0]}</p>
+    </div>
+  )
   return (
     <div className="container mt-5">
       <div className="card">
@@ -30,8 +41,10 @@ function App() {
           <h3>Hybrid Order</h3>
         </div>
         <div className="card-body">
+          {error.length > 0 && Error}
           <form onSubmit={handleSubmit}>
             <div className="mb-3">
+
               <label htmlFor="vendor" className="form-label">Vendor</label>
               <select
                 className="form-select"

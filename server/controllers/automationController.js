@@ -25,7 +25,6 @@ const runAutomation = async (req, res) => {
 
   let websiteUrl, username, password, response;
 
-  try {
     switch (vendor) {
       case 'ATD':
         websiteUrl = decryptedValues.ATD_URL;
@@ -83,10 +82,6 @@ const runAutomation = async (req, res) => {
     }
     await browser.close();
     res.json(response);
-  } catch (error) {
-    await browser.close();
-    res.status(500).json({ error: error.message });
-  }
 };
 
 module.exports = { runAutomation };

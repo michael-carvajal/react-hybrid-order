@@ -54,9 +54,13 @@ async function orderFromATD(
     if (pickup === "true") {
       await page.getByText("Customer Pickup").click();
     }
+  } catch (error) {
+    console.log(error);
+  }
+if (poNumber.indexOf("-") >= 0 ) {
     // Wait for the confirmation page to load
     await page.waitForSelector(".order-confirmation-message strong"); // Replace with the actual selector for the confirmation number
-
+  
     // Extract the confirmation number
     const confirmationNumber = await page.textContent(
       ".order-confirmation-message strong"
@@ -69,9 +73,7 @@ async function orderFromATD(
         pickup === "true" ? "Order set for will call" : `ETA is ${eta.trim()}`,
       ],
     };
-  } catch (error) {
-    console.log(error);
-  }
+}
 }
 
 module.exports = orderFromATD;
