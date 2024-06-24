@@ -80,7 +80,10 @@ const runAutomation = async (req, res) => {
       default:
         throw new Error('Invalid vendor');
     }
-    await browser.close();
+
+    setTimeout(() => {
+      console.log('waiting for next submission');  
+    }, 60000);
     res.json(response);
 };
 
