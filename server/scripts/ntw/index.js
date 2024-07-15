@@ -60,14 +60,14 @@ function getStoreNumber(storeNumber) {
     
     await page.getByPlaceholder("purchase order").click();
     await page.getByPlaceholder("purchase order").fill(poNumber);
-    if (pickup === "true") {
+    if (pickup === true) {
       await page.getByLabel("Will Call").check();
     }
     const confNums =  await page.textContent(`#dlgOrderLinesTable > tr:nth-child(2) > td:nth-child(2)`);
     const netPrice =  await page.textContent(`#dlgOrderLinesTable > tr:nth-child(3) > td:nth-child(4)`);
     const unitCost = netPrice === "$0" ? netPrice : price
     console.log(" ntw price ======>",price);
-    return {confirmation : [`Order # ${confNums}`, `Unit Cost ${unitCost}`, pickup === "true" ? "Order set for pick up" : eta]}
+    return {confirmation : [`Order # ${confNums}`, `Unit Cost ${unitCost}`, pickup === true ? "Order set for pick up" : eta]}
   
    }
   

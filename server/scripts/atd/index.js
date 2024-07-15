@@ -51,7 +51,7 @@ async function orderFromATD(
     }
 
     await page.fill("#customerPO", poNumber);
-    if (pickup === "true") {
+    if (pickup === true) {
       await page.getByText("Customer Pickup").click();
     }
   } catch (error) {
@@ -70,7 +70,7 @@ if (poNumber.indexOf("-") >= 0 ) {
     return {
       confirmation: [
         `Confirmation number # ${confNumParsed}`,
-        pickup === "true" ? "Order set for will call" : `ETA is ${eta.trim()}`,
+        pickup === true ? "Order set for will call" : `ETA is ${eta.trim()}`,
       ],
     };
 }

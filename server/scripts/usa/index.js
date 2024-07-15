@@ -94,7 +94,7 @@ async function login(username, password, page) {
       return { error: [error.message] };
     }
     await page.fill("#inputPurchaseOrder", poNumber);
-    if (pickup === "true") {
+    if (pickup === true) {
       await page.getByLabel("Open").nth(1).click();
       await page
         .getByRole("option", { name: "​ Pick up Local Warehouse" })
@@ -113,7 +113,7 @@ async function login(username, password, page) {
       confirmation: [
         confirmationNumber,
         // pickup === "true" ? "Order set for will call" : `ETA is ${eta.trim()}`,
-        `Unit cost $ ${price.slice(1)} ${pickup === "true" ? "- Order set for will call" : ""}`,
+        `Unit cost $ ${price.slice(1)} ${pickup === true ? "- Order set for will call" : ""}`,
       ],
     };
   }

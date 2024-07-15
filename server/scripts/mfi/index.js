@@ -53,7 +53,7 @@ async function orderFromMFI(
     .locator("#cHeaderLoggedIn_divReturnRequestDesktop + .other .cart.active")
     .click();
 
-  if (pickup === "true") {
+  if (pickup === true) {
     await page.locator("#WillcallP").click();
   }
   await page.locator("#divCheckOut").click();
