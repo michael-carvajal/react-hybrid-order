@@ -11,6 +11,7 @@ const orderFromKAndM = require('../scripts/kandm');
 const orderFromTireRack = require('../scripts/tirerack');
 
 const runAutomation = async (req, res) => {
+ try {
   const { vendor, storeNumber, itemNumber, poNumber, quantity, pickup } = req.body;
   const isTireRack = vendor === 'TIRERACK' ? firefox : chromium;
   const browser = await isTireRack.launch({ headless: false });
@@ -85,6 +86,10 @@ const runAutomation = async (req, res) => {
       console.log('waiting for next submission');  
     }, 60000);
     res.json(response);
+ } catch (error) {
+    console.log(error);
+    res.json(error)
+ }
 };
 
 module.exports = { runAutomation };
