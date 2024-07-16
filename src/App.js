@@ -10,6 +10,8 @@ function App() {
   const [pickup, setPickup] = useState(false);
   const [error, setError] = useState([]);
   const [confirmation, setConfirmation] = useState([]);
+  const [isTireRack, setIsTireRack] = useState(false);
+  const [tirerackAccount, setTirerackAccount] = useState("MavisCorp");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -36,8 +38,8 @@ function App() {
       console.log(data);
       if (data.error) {
         setError(data.error);
-      }else if (data.confirmation) {
-        setConfirmation(data.confirmation)
+      } else if (data.confirmation) {
+        setConfirmation(data.confirmation);
       }
     } catch (error) {
       console.log(error);
@@ -55,6 +57,18 @@ function App() {
       ))}
     </ul>
   );
+
+  const handleVendorChange = (e) => {
+    setVendor(e.target.value);
+    if (e.target.value === "TIRERACK") {
+      setIsTireRack(true);
+    } else {
+      setIsTireRack(false);
+    }
+  };
+  const handleTirerackAccountChange = (e) => {
+    setTirerackAccount(e.target.value);
+  };
   return (
     <div className="container mt-5">
       <div className="card">
@@ -73,7 +87,7 @@ function App() {
                 className="form-select"
                 id="vendor"
                 value={vendor}
-                onChange={(e) => setVendor(e.target.value)}
+                onChange={(e) => handleVendorChange(e)}
               >
                 <option value="ATD">ATD</option>
                 <option value="MFI">Max Finkelstein</option>
@@ -83,6 +97,45 @@ function App() {
                 <option value="USA">US Autoforce</option>
               </select>
             </div>
+            {isTireRack && (
+              <div className="mb-1" id="tirerackAccount">
+                <div>
+                  <input
+                    type="radio"
+                    id="MavisCorp"
+                    name="tirerackAccount"
+                    value="MavisCorp"
+                    checked={tirerackAccount === "MavisCorp"}
+                    onChange={handleTirerackAccountChange}
+                  />
+                  <label htmlFor="MavisCorp">MavisCorp</label>
+                </div>
+
+                <div>
+                  <input
+                    type="radio"
+                    id="a531156"
+                    name="tirerackAccount"
+                    value="a531156"
+                    checked={tirerackAccount === "a531156"}
+                    onChange={handleTirerackAccountChange}
+                  />
+                  <label htmlFor="a531156">a531156</label>
+                </div>
+
+                <div>
+                  <input
+                    type="radio"
+                    id="A531157"
+                    name="tirerackAccount"
+                    value="A531157"
+                    checked={tirerackAccount === "A531157"}
+                    onChange={handleTirerackAccountChange}
+                  />
+                  <label htmlFor="A531157">A531157</label>
+                </div>
+              </div>
+            )}
             <div className="mb-3">
               <label htmlFor="itemNumber" className="form-label">
                 Item Number
