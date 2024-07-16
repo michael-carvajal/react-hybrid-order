@@ -2,8 +2,23 @@
 const { chromium, firefox } = require("playwright");
 const crypto = require("crypto");
 const { hashedData, iv, decryptHashedValues } = require("./hashedValues");
-
 const orderFromVendor = require("./orderFromVendor");
+
+let browserInstances = {
+  chromium: null,
+  firefox: null,
+};
+
+const initBrowser = async (vendor) => {
+  const isTireRack = vendor === "TIRERACK";
+  const browserType = isTireRack ? firefox : chromium;
+  const browserKey = isTireRack ? 'firefox' : 'chromium';
+
+  if (!browserInstances[browserKey]) {
+    browserInstances[browserKey] = await browserType.launch({ headless: false });
+  }
+  return browserInstances[browserKey];
+};
 
 const runAutomation = async (req, res) => {
   try {
@@ -16,13 +31,13 @@ const runAutomation = async (req, res) => {
       pickup,
       tireRackAccount,
     } = req.body;
-    const isTireRack = vendor === "TIRERACK" ? firefox : chromium;
-    const browser = await isTireRack.launch({ headless: false });
+
+    const browser = await initBrowser(vendor);
     const page = await browser.newPage();
 
-    function deriveKey(password, salt, iterations, keylen) {
+    const deriveKey = (password, salt, iterations, keylen) => {
       return crypto.pbkdf2Sync(password, salt, iterations, keylen, "sha256");
-    }
+    };
 
     const key = deriveKey("juan_rocks_123", "salt", 100000, 32);
     const decryptedValues = decryptHashedValues(hashedData, iv, key);
