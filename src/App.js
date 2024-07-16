@@ -79,6 +79,7 @@ function App() {
                 <option value="MFI">Max Finkelstein</option>
                 <option value="NTW">NTW</option>
                 <option value="TIREHUB">Tirehub</option>
+                <option value="TIRERACK">Tire Rack</option>
                 <option value="USA">US Autoforce</option>
               </select>
             </div>
