@@ -18,6 +18,7 @@ async function orderFromTireRack(
   poNumber,
   pickup
 ) {
+try {
   const zipCode = getZipCode(storeNumber);
   await page.goto(url);
   await login(username, password, page);
@@ -75,6 +76,9 @@ async function orderFromTireRack(
   // await page.goto("https://www.tirerackwholesale.com/ssl/PaymentInfo.jsp");
   await page.getByLabel("Purchase Order #:").fill(poNumber);
   await page.getByRole("combobox").selectOption("Zig");
+} catch (error) {
+  return {error : error}
+}
 }
 
 module.exports = orderFromTireRack;
