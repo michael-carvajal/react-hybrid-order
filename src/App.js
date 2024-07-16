@@ -11,7 +11,7 @@ function App() {
   const [error, setError] = useState([]);
   const [confirmation, setConfirmation] = useState([]);
   const [isTireRack, setIsTireRack] = useState(false);
-  const [tirerackAccount, setTirerackAccount] = useState("MavisCorp");
+  const [tireRackAccount, setTireRackAccount] = useState("MavisCorp");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -32,6 +32,7 @@ function App() {
           poNumber,
           quantity,
           pickup,
+          tireRackAccount
         }),
       });
       const data = await response.json();
@@ -66,9 +67,10 @@ function App() {
       setIsTireRack(false);
     }
   };
-  const handleTirerackAccountChange = (e) => {
-    setTirerackAccount(e.target.value);
+  const handleTireRackAccountChange = (e) => {
+    setTireRackAccount(e.target.value);
   };
+  console.log(tireRackAccount);
   return (
     <div className="container mt-5">
       <div className="card">
@@ -98,15 +100,15 @@ function App() {
               </select>
             </div>
             {isTireRack && (
-              <div className="mb-1" id="tirerackAccount">
+              <div className="mb-1" id="tireRackAccount">
                 <div>
                   <input
                     type="radio"
                     id="MavisCorp"
-                    name="tirerackAccount"
+                    name="tireRackAccount"
                     value="MavisCorp"
-                    checked={tirerackAccount === "MavisCorp"}
-                    onChange={handleTirerackAccountChange}
+                    checked={tireRackAccount === "MavisCorp"}
+                    onChange={handleTireRackAccountChange}
                   />
                   <label htmlFor="MavisCorp">MavisCorp</label>
                 </div>
@@ -115,10 +117,10 @@ function App() {
                   <input
                     type="radio"
                     id="a531156"
-                    name="tirerackAccount"
+                    name="tireRackAccount"
                     value="a531156"
-                    checked={tirerackAccount === "a531156"}
-                    onChange={handleTirerackAccountChange}
+                    checked={tireRackAccount === "a531156"}
+                    onChange={handleTireRackAccountChange}
                   />
                   <label htmlFor="a531156">a531156</label>
                 </div>
@@ -127,10 +129,10 @@ function App() {
                   <input
                     type="radio"
                     id="A531157"
-                    name="tirerackAccount"
+                    name="tireRackAccount"
                     value="A531157"
-                    checked={tirerackAccount === "A531157"}
-                    onChange={handleTirerackAccountChange}
+                    checked={tireRackAccount === "A531157"}
+                    onChange={handleTireRackAccountChange}
                   />
                   <label htmlFor="A531157">A531157</label>
                 </div>
