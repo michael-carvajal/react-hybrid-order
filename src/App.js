@@ -1,5 +1,6 @@
 // src/App.js
 import React, { useState } from "react";
+import Login from "./Login";
 import "./App.css";
 
 function App() {
@@ -12,6 +13,8 @@ function App() {
   const [confirmation, setConfirmation] = useState([]);
   const [isTireRack, setIsTireRack] = useState(false);
   const [tireRackAccount, setTireRackAccount] = useState("MavisCorp");
+  const [isLoggedIn, setIsLoggedIn] =  useState(false);
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -80,7 +83,7 @@ function App() {
         <div className="card-body">
           {error.length > 0 && Error}
           {confirmation.length > 0 && Confirmation}
-          <form onSubmit={handleSubmit}>
+          {!isLoggedIn ?  <Login setIsLoggedIn={setIsLoggedIn} /> :  <form onSubmit={handleSubmit}>
             <div className="mb-3">
               <label htmlFor="vendor" className="form-label">
                 Vendor
@@ -189,7 +192,7 @@ function App() {
             <button type="submit" className="btn btn-primary">
               Submit
             </button>
-          </form>
+          </form>}
         </div>
       </div>
     </div>
