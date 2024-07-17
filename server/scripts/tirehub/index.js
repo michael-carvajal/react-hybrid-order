@@ -64,7 +64,7 @@ async function orderFromTirehub(
 
   await page.getByPlaceholder("PO Number (optional)").click();
   await page.getByPlaceholder("PO Number (optional)").fill(poNumber);
-  if (pickup === "true") {
+  if (pickup === true) {
     await page.locator("#shopping-cart-table").getByText("Will Call").click();
     // await page.locator('div:nth-child(2) > .shipping-method > .shippig-method-radio').click();
   }
@@ -75,7 +75,7 @@ async function orderFromTirehub(
     confirmation: [
       `Order # ${orderNumber.split("\n")[1].trim()}`,
       isZeroPrice,
-      pickup === "true" ? "Order set for pick up" : "",
+      pickup === true ? "Order set for pick up" : "",
     ],
   };
 }
