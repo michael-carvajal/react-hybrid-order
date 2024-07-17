@@ -1,5 +1,6 @@
 // src/App.js
 import React, { useState } from "react";
+import Login from "./Login";
 import "./App.css";
 
 function App() {
@@ -10,6 +11,10 @@ function App() {
   const [pickup, setPickup] = useState(false);
   const [error, setError] = useState([]);
   const [confirmation, setConfirmation] = useState([]);
+  const [isTireRack, setIsTireRack] = useState(false);
+  const [tireRackAccount, setTireRackAccount] = useState("MavisCorp");
+  const [isLoggedIn, setIsLoggedIn] =  useState(false);
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -17,26 +22,31 @@ function App() {
     setError([]);
     console.log(vendor, itemNumber, poNumber, quantity, pickup);
     const storeNumber = poNumber.split("-")[0];
-    const response = await fetch("http://localhost:5000/api/automation/run", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        vendor,
-        storeNumber,
-        itemNumber,
-        poNumber,
-        quantity,
-        pickup,
-      }),
-    });
-    const data = await response.json();
-    console.log(data);
-    if (data.error) {
-      setError(data.error);
-    }else if (data.confirmation) {
-      setConfirmation(data.confirmation)
+    try {
+      const response = await fetch("http://localhost:5000/api/automation/run", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          vendor,
+          storeNumber,
+          itemNumber,
+          poNumber,
+          quantity,
+          pickup,
+          tireRackAccount
+        }),
+      });
+      const data = await response.json();
+      console.log(data);
+      if (data.error) {
+        setError(data.error);
+      } else if (data.confirmation) {
+        setConfirmation(data.confirmation);
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
   const Error = (
@@ -51,6 +61,19 @@ function App() {
       ))}
     </ul>
   );
+
+  const handleVendorChange = (e) => {
+    setVendor(e.target.value);
+    if (e.target.value === "TIRERACK") {
+      setIsTireRack(true);
+    } else {
+      setIsTireRack(false);
+    }
+  };
+  const handleTireRackAccountChange = (e) => {
+    setTireRackAccount(e.target.value);
+  };
+  console.log(tireRackAccount);
   return (
     <div className="container mt-5">
       <div className="card">
@@ -60,7 +83,7 @@ function App() {
         <div className="card-body">
           {error.length > 0 && Error}
           {confirmation.length > 0 && Confirmation}
-          <form onSubmit={handleSubmit}>
+          {!isLoggedIn ?  <Login setIsLoggedIn={setIsLoggedIn} /> :  <form onSubmit={handleSubmit}>
             <div className="mb-3">
               <label htmlFor="vendor" className="form-label">
                 Vendor
@@ -69,15 +92,55 @@ function App() {
                 className="form-select"
                 id="vendor"
                 value={vendor}
-                onChange={(e) => setVendor(e.target.value)}
+                onChange={(e) => handleVendorChange(e)}
               >
                 <option value="ATD">ATD</option>
                 <option value="MFI">Max Finkelstein</option>
                 <option value="NTW">NTW</option>
                 <option value="TIREHUB">Tirehub</option>
+                <option value="TIRERACK">Tire Rack</option>
                 <option value="USA">US Autoforce</option>
               </select>
             </div>
+            {isTireRack && (
+              <div className="mb-1" id="tireRackAccount">
+                <div>
+                  <input
+                    type="radio"
+                    id="MavisCorp"
+                    name="tireRackAccount"
+                    value="MavisCorp"
+                    checked={tireRackAccount === "MavisCorp"}
+                    onChange={handleTireRackAccountChange}
+                  />
+                  <label htmlFor="MavisCorp">MavisCorp</label>
+                </div>
+
+                <div>
+                  <input
+                    type="radio"
+                    id="a531156"
+                    name="tireRackAccount"
+                    value="a531156"
+                    checked={tireRackAccount === "a531156"}
+                    onChange={handleTireRackAccountChange}
+                  />
+                  <label htmlFor="a531156">a531156</label>
+                </div>
+
+                <div>
+                  <input
+                    type="radio"
+                    id="A531157"
+                    name="tireRackAccount"
+                    value="A531157"
+                    checked={tireRackAccount === "A531157"}
+                    onChange={handleTireRackAccountChange}
+                  />
+                  <label htmlFor="A531157">A531157</label>
+                </div>
+              </div>
+            )}
             <div className="mb-3">
               <label htmlFor="itemNumber" className="form-label">
                 Item Number
@@ -129,7 +192,7 @@ function App() {
             <button type="submit" className="btn btn-primary">
               Submit
             </button>
-          </form>
+          </form>}
         </div>
       </div>
     </div>
