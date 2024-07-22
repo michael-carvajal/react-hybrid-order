@@ -2,10 +2,9 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
-const automationRoutes = require('../routes/automation');
+const automationRoutes = require(path.join(__dirname, 'routes', 'automation'));
 
 const app = express();
-const port = process.env.PORT || 5000;
 
 app.use(cors());
 app.use(express.json());
@@ -22,6 +21,3 @@ app.get('/', function (req, res) {
 
 module.exports = app;
 
-app.listen(port, () => {
-  console.log(`Server is running on port: ${port}`);
-});
