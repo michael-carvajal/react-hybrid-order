@@ -6,7 +6,7 @@ function Login({setIsLoggedIn}) {
   
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (empNum === "882339") {
+    if (empNum === "882339" || empNum === "29179" || empNum === "882322" || empNum === "11261") {
         setError("")
         setIsLoggedIn(true)
     }else {
