@@ -77,6 +77,6 @@ const response = await fetch("http://localhost:5000/api/automation/run", {
 });
 const data = await response.json();
 const confirmation = data.confirmation;
-const referenceNum   = confirmation[0];
+const referenceNum   = confirmation[0].split(" ").at(-1);
 const txtorderReference = document.getElementById("txtorderReference");
 txtorderReference.value = referenceNum;
