@@ -6,57 +6,18 @@
 
 // body.appendChild(newButton);
 
-// On hybrid order
-
-// let itemNumber = document.getElementById("itemNumber").value;
-// let poNumber = document.getElementById("poNumber").value;
-// let quantity = document.getElementById("quantity").value;
-// let vendor = document.getElementById("vendor").value;
-
-// const storeNumber = poNumber.split("-")[0];
-
-// const response = await fetch("http://localhost:5000/api/automation/run", {
-//   method: "POST",
-//   headers: {
-//     "Content-Type": "application/json",
-//   },
-//   body: JSON.stringify({
-//     vendor,
-//     storeNumber,
-//     itemNumber,
-//     poNumber,
-//     quantity,
-//     pickup : false, // TODO: add pickup option
-//     tireRackAccount: "MavisCorp",
-//   }),
-// });
-// const data = await response.json();
-// console.log(data);
-
-// On Sourcing form
-
-/* 
-ATD Secondary
-ATD Direct
-NTW
-TireHub
-Tire Rack
-Max Finkelstein
-K & M Tire
-US Autoforce
-Other
-Gateway
-US_AUTOFORCE
-
-
-*/
-
 function vendorSwitchCase(vendor) {
   switch (vendor) {
     case "ATD Secondary":
       vendor = "ATD";
       break;
     case "ATD Direct":
+      vendor = "ATD";
+      break;
+    case "ATD-LOCAL":
+      vendor = "ATD";
+      break;
+    case "ATD-LOCALPLUS":
       vendor = "ATD";
       break;
     case "NTW":
@@ -115,4 +76,7 @@ const response = await fetch("http://localhost:5000/api/automation/run", {
   }),
 });
 const data = await response.json();
-console.log(data);
+const confirmation = data.confirmation;
+const referenceNum   = confirmation[0];
+const txtorderReference = document.getElementById("txtorderReference");
+txtorderReference.value = referenceNum;
