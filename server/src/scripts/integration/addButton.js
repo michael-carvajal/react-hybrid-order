@@ -101,3 +101,5 @@ const txtPrice = document.getElementById("txtPrice");
 txtPrice.value = unitPrice;
 const txtorderReference = document.getElementById("txtorderReference");
 txtorderReference.value = referenceNum;
+const rdoOrderPlacedYes = document.getElementById("rdoOrderPlacedYes");
+rdoOrderPlacedYes.click()
