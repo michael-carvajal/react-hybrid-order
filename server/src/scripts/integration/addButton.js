@@ -78,11 +78,24 @@ const response = await fetch("http://localhost:5000/api/automation/run", {
 const data = await response.json();
 const confirmation = data.confirmation;
 const referenceNum = confirmation[0].split(" ").at(-1);
+const txtAvgCost = document.getElementById("txtAvgCost").value;
 
-const usAutoForcePrice = (vendor) =>
-  vendor === "USA" ? confirmation[1].trim().split(" ").at(-1) : "";
+const getUnitPrice = (vendor) => {
+  if (vendor === "USA") {
+    return confirmation[1].trim().split(" ").at(-1);
+  } else if (vendor === "ATD") {
+    return txtAvgCost;
+  } else if (vendor === "MFI") {
+    if (confirmation[1].length > 5) {
+      return confirmation[1].trim().split(" ").at(-1).slice(1)
+    }else {
+      return txtAvgCost
+    }
+  }
 
-let unitPrice = usAutoForcePrice(vendor);
+  return "";
+};
+let unitPrice = getUnitPrice(vendor);
 
 const txtPrice = document.getElementById("txtPrice");
 txtPrice.value = unitPrice;
