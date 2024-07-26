@@ -91,6 +91,9 @@ const getUnitPrice = (vendor) => {
     }else {
       return txtAvgCost
     }
+  } else if (vendor === "NTW") {
+    let price = confirmation[1].trim().split(" ").at(-1).slice(1)
+    return price === "0" ? txtAvgCost : price;
   }
 
   return "";
