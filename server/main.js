@@ -1,6 +1,6 @@
-const { app, BrowserWindow } = require('electron');
-const path = require('path');
-const server = require(path.join(__dirname, 'src', 'server'));
+const { app, BrowserWindow } = require("electron");
+const path = require("path");
+const server = require(path.join(__dirname, "src", "server"));
 
 let mainWindow;
 
@@ -8,35 +8,33 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
-    icon : path.join(__dirname, 'src', 'images', "appIcon.png"),
+    icon: path.join(__dirname, "src", "images", "appIcon.png"),
     webPreferences: {
       // preload: path.join(__dirname, 'preload.js')
-    }
+    },
   });
 
-  mainWindow.loadURL('http://localhost:5500');
-
-  mainWindow.on('closed', function () {
+  mainWindow.on("closed", function () {
     mainWindow = null;
   });
 }
 
-app.on('ready', () => {
+app.on("ready", () => {
   createWindow();
 });
 
-app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
+app.on("window-all-closed", () => {
+  if (process.platform !== "darwin") {
     app.quit();
   }
 });
 
-app.on('activate', () => {
+app.on("activate", () => {
   if (mainWindow === null) {
     createWindow();
   }
 });
 
 server.listen(5000, () => {
-  console.log('Express server running on http://localhost:5000');
+  console.log("Express server running on http://localhost:5000");
 });
