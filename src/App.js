@@ -192,25 +192,27 @@ function App() {
                   Pick up
                 </label>
               </div>
-              <button type="submit" className="btn btn-primary">
-                Submit
-              </button>
-              <SearchVendorsButton
-                type="submit"
-                className="btn btn-primary"
-                props={{
-                  vendor,
-                  itemNumber,
-                  poNumber,
-                  quantity,
-                  pickup,
-                  tireRackAccount,
-                }}
-                setError={setError}
-                setConfirmation={setConfirmation}
-              >
-                Submit
-              </SearchVendorsButton>
+              <div className="buttons-container">
+                <button type="submit" className="btn btn-primary">
+                  Submit
+                </button>
+                <SearchVendorsButton
+                  type="submit"
+                  className="btn btn-primary"
+                  props={{
+                    vendor,
+                    itemNumber,
+                    poNumber,
+                    quantity,
+                    pickup,
+                    tireRackAccount,
+                  }}
+                  setError={setError}
+                  setConfirmation={setConfirmation}
+                >
+                  Submit
+                </SearchVendorsButton>
+              </div>
             </form>
           )}
         </div>
