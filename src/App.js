@@ -98,6 +98,7 @@ function App() {
                   onChange={(e) => handleVendorChange(e)}
                 >
                   <option value="ATD">ATD</option>
+                  <option value="K&M">K&M</option>
                   <option value="MFI">Max Finkelstein</option>
                   <option value="NTW">NTW</option>
                   <option value="TIREHUB">Tirehub</option>
