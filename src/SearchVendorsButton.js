@@ -44,7 +44,6 @@ function SearchVendorsButton({ props, setError, setConfirmation }) {
       
     } catch (error) {
       console.log(error);
-      setError(["An error occurred while processing the requests."]);
     }
   };
 
