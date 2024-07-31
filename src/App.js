@@ -31,9 +31,9 @@ function App() {
         body: JSON.stringify({
           vendor,
           storeNumber,
-          itemNumber,
-          poNumber,
-          quantity,
+          itemNumber : itemNumber.trim(),
+          poNumber: poNumber.trim(),
+          quantity: quantity.trim(),
           pickup,
           tireRackAccount,
         }),
