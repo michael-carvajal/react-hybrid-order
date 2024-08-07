@@ -91,7 +91,7 @@ async function orderFromUSA(
     await searchForItem(page, itemNumber, quantity);
   } catch (error) {
     console.error("An error occurred: ===========>", error.message);
-    return { error: [error.message] };
+    return { error: error.message};
   }
   await page.fill("#inputPurchaseOrder", poNumber);
   if (pickup === true) {
