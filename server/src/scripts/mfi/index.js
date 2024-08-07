@@ -29,7 +29,7 @@ async function orderFromMFI(
   const storeId = await getStoreId(storeNumber);
   console.log(storeId);
   if (!storeId) {
-    return { error: [`Store ${storeNumber} not found`] };
+    return { error: `Store ${storeNumber} not found` };
   }
   await page.fill("#cphBody_cphPageBody_txtCust", storeId);
   await page.keyboard.press("Enter");
@@ -44,7 +44,7 @@ async function orderFromMFI(
       { timeout: 1000 }
     );
     if (backordered === "Backordered") {
-      return { error: ["Item not available"] };
+      return { error: "Item not available" };
     }
   } catch (error) {}
   await page.locator(".form_elements  span + input").fill(quantity);
@@ -64,17 +64,21 @@ async function orderFromMFI(
     "text=Order Placed, Order Number:"
   );
   console.log(orderNumber);
-  let price 
+  let price;
   try {
     price = await page.textContent(
-      "body > div.push_container > section.portal_content_block_receipt.container > div > form > div > table > tbody > tr.Items > td:nth-child(5)"
-    ,{timeout : 1000});
-  } catch (error) {
-    
-  }
+      "body > div.push_container > section.portal_content_block_receipt.container > div > form > div > table > tbody > tr.Items > td:nth-child(5)",
+      { timeout: 1000 }
+    );
+  } catch (error) {}
   console.log(price);
 
-  return { confirmation: [orderNumber.split(", ")[1], (price ? `Unit cost ${price}` : "")]  };
+  return {
+    confirmation: {
+      confirmationNumber: orderNumber.split(", ")[1],
+      cost : price,
+    },
+  };
 }
 
 module.exports = orderFromMFI;
