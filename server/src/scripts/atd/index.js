@@ -18,7 +18,7 @@ async function searchForItem(page, itemNumber, quantity) {
     const addToCart = await page.getByText(" Add to cart ").all();
     await addToCart[1].click();
   } catch (error) {
-    return ["Item not found"];
+    return "Item not found";
   }
 }
 
@@ -39,7 +39,7 @@ async function orderFromATD(
   try {
     storeId = await getStoreId(storeNumber);
     if (!storeId) {
-      return { error: ["Store cannot be found"] };
+      return { error: "Store cannot be found" };
     }
     //   console.log(storeId);
     await page.fill("#select-location", storeId);
@@ -57,23 +57,21 @@ async function orderFromATD(
   } catch (error) {
     console.log(error);
   }
-if (poNumber.indexOf("-") >= 0 ) {
+  if (poNumber.indexOf("-") >= 0) {
     // Wait for the confirmation page to load
     await page.waitForSelector(".order-confirmation-message strong"); // Replace with the actual selector for the confirmation number
-  
+
     // Extract the confirmation number
     const confirmationNumber = await page.textContent(
       ".order-confirmation-message strong"
     ); // Replace with the actual selector for the confirmation number
     const confNumParsed = confirmationNumber.split(" ").at(-1);
-    const eta = await page.textContent(".estDeliveryDate");
-    return {
-      confirmation: [
-        `Confirmation number # ${confNumParsed}`,
-        pickup === true ? "Order set for will call" : `ETA is ${eta.trim()}`,
-      ],
-    };
-}
+    const eta = !pickup && await page.textContent(".estDeliveryDate");
+    return {confirmation :  {
+      confirmationNumber: confNumParsed,
+      eta: pickup ? "Order set for will call" : `ETA is ${eta.trim()}`,
+    }};
+  }
 }
 
 module.exports = orderFromATD;

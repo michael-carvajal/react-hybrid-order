@@ -10,7 +10,7 @@ function App() {
   const [poNumber, setPoNumber] = useState("");
   const [quantity, setQuantity] = useState("");
   const [pickup, setPickup] = useState(false);
-  const [error, setError] = useState([]);
+  const [error, setError] = useState("");
   const [confirmation, setConfirmation] = useState([]);
   const [isTireRack, setIsTireRack] = useState(false);
   const [tireRackAccount, setTireRackAccount] = useState("MavisCorp");
@@ -19,7 +19,7 @@ function App() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setConfirmation([]);
-    setError([]);
+    setError("");
     // console.log(vendor, itemNumber, poNumber, quantity, pickup);
     const storeNumber = poNumber.split("-")[0];
     try {
@@ -31,9 +31,9 @@ function App() {
         body: JSON.stringify({
           vendor,
           storeNumber,
-          itemNumber,
-          poNumber,
-          quantity,
+          itemNumber : itemNumber.trim(),
+          poNumber: poNumber.trim(),
+          quantity: quantity.trim(),
           pickup,
           tireRackAccount,
         }),
@@ -43,7 +43,7 @@ function App() {
       if (data.error) {
         setError(data.error);
       } else if (data.confirmation) {
-        setConfirmation(data.confirmation);
+        setConfirmation(Object.values(data.confirmation));
       }
     } catch (error) {
       console.log(error);
@@ -51,7 +51,7 @@ function App() {
   };
   const Error = (
     <div>
-      <p>{error[0]}</p>
+      <p>{error}</p>
     </div>
   );
   const Confirmation = (
@@ -73,7 +73,7 @@ function App() {
   const handleTireRackAccountChange = (e) => {
     setTireRackAccount(e.target.value);
   };
-  console.log(tireRackAccount);
+  console.log(confirmation);
   return (
     <div className="container mt-5">
       <div className="card">

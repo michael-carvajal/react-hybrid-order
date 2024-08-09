@@ -70,13 +70,13 @@ async function orderFromTirehub(
   }
   const orderNumber = await page.textContent(".order-number strong");
   console.log("order number or tire hub ", orderNumber.split(""));
-  const isZeroPrice = cartPrice.indexOf("$0.00") > 0 ? "" : cartPrice
+  const isZeroPrice = cartPrice.indexOf("$0.00") > 0 ? "" : cartPrice;
   return {
-    confirmation: [
-      `Order # ${orderNumber.split("\n")[1].trim()}`,
-      isZeroPrice,
-      pickup === true ? "Order set for pick up" : "",
-    ],
+    confirmation: {
+      confirmationNumber: orderNumber.split("\n")[1].trim(),
+      cost: isZeroPrice,
+      eta: pickup === true ? "Order set for pick up" : "",
+    },
   };
 }
 
