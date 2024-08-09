@@ -75,8 +75,8 @@ async function orderFromMFI(
 
   return {
     confirmation: {
-      confirmationNumber: orderNumber.split(", ")[1],
-      cost : price,
+      confirmationNumber: orderNumber.split(" ").at(-1),
+      cost : price.slice(1),
     },
   };
 }

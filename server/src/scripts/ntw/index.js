@@ -71,7 +71,7 @@ async function orderFromNTW(
   const netPrice = await page.textContent(
     `#dlgOrderLinesTable > tr:nth-child(3) > td:nth-child(4)`
   );
-  const unitCost = netPrice === "$0" ? netPrice : price;
+  const unitCost = netPrice === "$0" ? netPrice : price.slice(1);
   console.log(" ntw price ======>", price);
   return {
     confirmation: {

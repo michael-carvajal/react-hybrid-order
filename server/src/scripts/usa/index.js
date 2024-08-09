@@ -111,7 +111,7 @@ async function orderFromUSA(
   console.log(confirmationNumber, " -- $", price.slice(1));
   return {
     confirmation: {
-      confirmationNumber,
+      confirmationNumber : confirmationNumber.split(" ").at(-1),
       eta: pickup ?? "Order set for will call",
       cost: price.slice(1),
     },
