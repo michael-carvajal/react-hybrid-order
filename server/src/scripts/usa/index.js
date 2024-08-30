@@ -91,14 +91,12 @@ async function orderFromUSA(
     await searchForItem(page, itemNumber, quantity);
   } catch (error) {
     console.error("An error occurred: ===========>", error.message);
-    return { error: error.message};
+    return { error: error.message };
   }
   await page.fill("#inputPurchaseOrder", poNumber);
   if (pickup === true) {
     await page.getByLabel("Open").nth(1).click();
-    await page
-      .getByRole("option", { name: "​ Pick up Local Warehouse" })
-      .click();
+    await page.getByRole("option", { name: "​ Will Call" }).click();
   }
 
   // Wait for the confirmation page to load
@@ -111,7 +109,7 @@ async function orderFromUSA(
   console.log(confirmationNumber, " -- $", price.slice(1));
   return {
     confirmation: {
-      confirmationNumber : confirmationNumber.split(" ").at(-1),
+      confirmationNumber: confirmationNumber.split(" ").at(-1),
       eta: pickup ?? "Order set for will call",
       cost: price.slice(1),
     },
