@@ -60,13 +60,14 @@ async function orderFromATD(
   if (poNumber.indexOf("-") >= 0) {
     // Wait for the confirmation page to load
     await page.waitForSelector(".order-confirmation-message strong"); // Replace with the actual selector for the confirmation number
-
+    
     // Extract the confirmation number
     const confirmationNumber = await page.textContent(
       ".order-confirmation-message strong"
     ); // Replace with the actual selector for the confirmation number
     const confNumParsed = confirmationNumber.split(" ").at(-1);
     const eta = !pickup && await page.textContent(".estDeliveryDate");
+    await page.fill("#comment", "Ordered using Hybrid System");
     return {confirmation :  {
       confirmationNumber: confNumParsed,
       eta: pickup ? "Order set for will call" : `ETA is ${eta.trim()}`,
