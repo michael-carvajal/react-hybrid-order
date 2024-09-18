@@ -3,6 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const path = require('path');
 const automationRoutes = require(path.join(__dirname, 'routes', 'automation'));
+const sourcingQueueRoutes = require(path.join(__dirname, 'routes', 'sourcingQueue'));
 
 const app = express();
 
@@ -10,6 +11,8 @@ app.use(cors());
 app.use(express.json());
 
 app.use('/api/automation', automationRoutes);
+app.use('/api/sourcingQueue', sourcingQueueRoutes);
+
 app.get('/hello', (req, res) => {
   return res.json({ message: "hello world" });
 });
