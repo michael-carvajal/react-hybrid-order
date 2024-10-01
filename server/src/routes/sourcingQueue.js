@@ -1,7 +1,9 @@
 const express = require("express");
-const { fetchQueueData } = require("../controllers/queueController");
+const { fetchQueueData, login } = require("../controllers/queueController");
 const router = express.Router();
 
 router.get("/", fetchQueueData);
+router.post("/login", login);
+
 
 module.exports = router;
