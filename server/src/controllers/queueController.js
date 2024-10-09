@@ -39,10 +39,30 @@ const login = async (req, res) => {
     await pool.connect();
     const sql = `SELECT Count(*) as count FROM ShuttleNew.dbo.tbl_request_queue_source_users WHERE empNum=${empNum}`;
     const result = await pool.request().query(sql);
+    console.log(result);
+    
     res.json(result.recordset[0].count);
   } catch (err) {
     console.error("SQL error", err);
     res.status(500).send("Internal Server Error");
   }
 };
-module.exports = { fetchQueueData, login };
+const orderStatus = async (req, res) => {
+  try {
+    const workorder = req.body.workorder;
+
+    const pool = new ConnectionPool(dbConfig);
+    await pool.connect();
+    const sql = `SELECT s.*, m.avg_cost_invoice as averageCost 
+FROM ShuttleNew.dbo.tbl_request_queue_source s 
+left join edi.dbo.sequal_inv_mas m on s.item = m.Alpha_Item_Number 
+WHERE s.workorder =${workorder}`;
+    const result = await pool.request().query(sql);
+    res.json(result);
+  } catch (err) {
+    console.error("SQL error", err);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
+module.exports = { fetchQueueData, login, orderStatus };
