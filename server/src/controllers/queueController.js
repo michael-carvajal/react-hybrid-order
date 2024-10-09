@@ -40,7 +40,7 @@ const login = async (req, res) => {
     const sql = `SELECT Count(*) as count FROM ShuttleNew.dbo.tbl_request_queue_source_users WHERE empNum=${empNum}`;
     const result = await pool.request().query(sql);
     console.log(result);
-    
+
     res.json(result.recordset[0].count);
   } catch (err) {
     console.error("SQL error", err);
@@ -58,7 +58,7 @@ FROM ShuttleNew.dbo.tbl_request_queue_source s
 left join edi.dbo.sequal_inv_mas m on s.item = m.Alpha_Item_Number 
 WHERE s.workorder =${workorder}`;
     const result = await pool.request().query(sql);
-    res.json(result);
+    res.json(result.recordset);
   } catch (err) {
     console.error("SQL error", err);
     res.status(500).send("Internal Server Error");
