@@ -8,6 +8,22 @@ let browserInstances = {
   chromium: null,
   firefox: null,
 };
+const vendors = {
+  NTW: "NTW",
+  TIREHUB: "TIREHUB",
+  TireHub: "TIREHUB",
+  TIRERACK: "TIRERACK",
+  "ATD-LOCAL": "ATD",
+  "ATD-LOCALPLUS": "ATD",
+  ATD: "ATD",
+  "ATD-NATIONAL (3-7 days ou": "ATD",
+  US_AUTOFORCE: "USA",
+  "US AUTOFORCE": "USA",
+  "US Autoforce": "USA",
+  FINKELSTEIN: "MFI",
+  "MAX FINKELSTEIN": "MFI",
+  Finkelstein: "MFI",
+};
 
 const initBrowser = async (vendor) => {
   const isTireRack = vendor === "TIRERACK";
@@ -22,7 +38,7 @@ const initBrowser = async (vendor) => {
 
 const runAutomation = async (req, res) => {
   try {
-    const {
+    let {
       vendor,
       storeNumber,
       itemNumber,
@@ -48,7 +64,7 @@ const runAutomation = async (req, res) => {
       storeNumber,
       itemNumber,
       quantity,
-      vendor,
+      vendor = vendors[vendor],
       poNumber,
       pickup,
       tireRackAccount
@@ -64,5 +80,6 @@ const runAutomation = async (req, res) => {
     res.json(error);
   }
 };
+
 
 module.exports = { runAutomation };
