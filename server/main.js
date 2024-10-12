@@ -48,8 +48,37 @@ ipcMain.handle("run-automation", async (event, args) => {
     quantity,
     pickup,
     tireRackAccount,
+    isAllVendors,
   } = args;
+  if (isAllVendors) {
+    const vendors = ["NTW", "TIREHUB", "TIRERACK", "ATD", "USA", "MFI"];
+    const storeNumber = poNumber.split("-")[0];
 
+    try {
+      const requests = vendors.map((vendor) => {
+        return fetch("http://localhost:5000/api/automation/run", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            vendor,
+            storeNumber,
+            itemNumber,
+            poNumber,
+            quantity,
+            pickup,
+            tireRackAccount,
+          }),
+        }).then((response) => response.json());
+      });
+
+      const results = await Promise.all(requests);
+    } catch (error) {
+      console.log(error);
+    }
+    return
+  }
   const response = await fetch("http://localhost:5000/api/automation/run", {
     method: "POST",
     headers: {
