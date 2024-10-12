@@ -1,5 +1,5 @@
 const { ConnectionPool } = require("mssql");
-
+const sql = require("mssql");
 // Configure your SQL Server connection
 const dbConfig = {
   server: "SERVER3",
@@ -49,15 +49,41 @@ const login = async (req, res) => {
 };
 const orderStatus = async (req, res) => {
   try {
-    const workorder = req.body.workorder;
+    const { workorder, store } = req.body;
 
-    const pool = new ConnectionPool(dbConfig);
+    // Determine which field to filter by (either 'workorder' or 'store')
+    const filterBy = workorder ? "workorder" : "store";
+    const filterValue = workorder || store; // The actual value to search for
+
+    if (!filterValue) {
+      return res.status(400).send("No workorder or store provided.");
+    }
+
+    // Log to check filterValue is correctly defined
+    console.log("filterValue:", filterValue);
+
+    const pool = new sql.ConnectionPool(dbConfig);
     await pool.connect();
-    const sql = `SELECT s.*, m.avg_cost_invoice as averageCost 
-FROM ShuttleNew.dbo.tbl_request_queue_source s 
-left join edi.dbo.sequal_inv_mas m on s.item = m.Alpha_Item_Number 
-WHERE s.workorder =${workorder}`;
-    const result = await pool.request().query(sql);
+
+    // Validate filterBy to avoid SQL injection risks
+    const validColumns = ["workorder", "store"];
+    if (!validColumns.includes(filterBy)) {
+      return res.status(400).send("Invalid filter column");
+    }
+
+    // Parameterized SQL query (use @filterValue for the parameter)
+    const query = `
+      SELECT s.*, m.avg_cost_invoice as averageCost 
+      FROM ShuttleNew.dbo.tbl_request_queue_source s 
+      LEFT JOIN edi.dbo.sequal_inv_mas m ON s.item = m.Alpha_Item_Number 
+      WHERE s.${filterBy} = @filterValue`;
+
+    // Prepare and execute the query using parameterized input
+    const result = await pool
+      .request()
+      .input("filterValue", sql.NVarChar, filterValue) // Ensure this matches the data type in SQL
+      .query(query);
+
     res.json(result.recordset);
   } catch (err) {
     console.error("SQL error", err);
