@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require("electron");
+const { app, BrowserWindow, ipcMain } = require("electron");
 const path = require("path");
 const server = require(path.join(__dirname, "src", "server"));
 
@@ -6,14 +6,14 @@ let mainWindow;
 
 function createWindow() {
   mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 360,
+    height: 715,
     icon: path.join(__dirname, "src", "images", "appIcon.png"),
     webPreferences: {
-      // preload: path.join(__dirname, 'preload.js')
+      preload: path.join(__dirname, "preload.js"),
     },
   });
-
+  mainWindow.loadFile("./dist/index.html");
   mainWindow.on("closed", function () {
     mainWindow = null;
   });
@@ -37,4 +37,34 @@ app.on("activate", () => {
 
 server.listen(5000, () => {
   console.log("Express server running on http://localhost:5000");
+});
+
+ipcMain.handle("run-automation", async (event, args) => {
+  const {
+    vendor,
+    storeNumber,
+    itemNumber,
+    poNumber,
+    quantity,
+    pickup,
+    tireRackAccount,
+  } = args;
+
+  const response = await fetch("http://localhost:5000/api/automation/run", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      vendor,
+      storeNumber,
+      itemNumber,
+      poNumber,
+      quantity,
+      pickup,
+      tireRackAccount,
+    }),
+  });
+  const data = await response.json();
+  console.log(data);
 });
