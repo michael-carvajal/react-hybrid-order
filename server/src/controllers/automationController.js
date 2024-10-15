@@ -22,7 +22,9 @@ const vendors = {
   "US Autoforce": "USA",
   FINKELSTEIN: "MFI",
   "MAX FINKELSTEIN": "MFI",
+  "Max Finkelstein": "MFI",
   Finkelstein: "MFI",
+    "USA" : "USA", "MFI" : "MFI"
 };
 
 const initBrowser = async (vendor) => {
