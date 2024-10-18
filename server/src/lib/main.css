@@ -1,0 +1,66 @@
+body {
+  transition: background-color 0.3s, color 0.3s;
+}
+
+body.light-mode {
+  background-color: #f8f9fa;
+  color: #212529;
+}
+
+body.dark-mode {
+  background-color: #212529;
+  color: #f8f9fa;
+}
+.hidden {
+  display: none;
+}
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-width: 20rem;
+  margin: 10px auto;
+  background-color: inherit;
+  color: inherit;
+}
+
+#error-cancel {
+  position: absolute;
+  right: 15px;
+  top: 10px;
+}
+#error-cancel:hover {
+  font-weight: bold;
+  cursor: pointer;
+}
+#submit {
+  margin-top: 28px;
+}
+
+#tirerackAccount{
+  justify-content: space-between;
+  display:  none;
+}
+
+label,
+.form-control,
+.form-select,
+.form-check-input {
+  background-color: inherit;
+  color: inherit;
+}
+
+.form-check-label {
+  margin-bottom: 10px;
+}
+
+#toggleLabel {
+  position: absolute;
+  bottom: 0;
+  right: 2em;
+}
+
+#order-form .form-check-label,
+#order-form .form-check-input {
+  cursor: pointer;
+}
