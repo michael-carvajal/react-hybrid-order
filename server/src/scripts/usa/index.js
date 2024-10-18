@@ -1,11 +1,10 @@
 async function login(username, password, page) {
   // Fill in the username
-  await page.fill("#usernameTextBox", username);
+  await page.fill("#userName", username);
 
   // Fill in the password
-  await page.fill("#passwordTextBox", password);
-  await page.getByRole("button").click();
-  await page.getByRole("textbox");
+  await page.fill("#password", password);
+  await page.getByRole('button', { name: 'Log in' }).click();
 }
 
 async function searchForItem(page, itemNumber, quantity) {

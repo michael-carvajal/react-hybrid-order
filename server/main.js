@@ -17,6 +17,14 @@ function createWindow() {
   mainWindow.on("closed", function () {
     mainWindow = null;
   });
+  // Load the context menu
+  (async () => {
+    const contextMenu = (await import("electron-context-menu")).default;
+
+    contextMenu({
+      labels: { copy: "Copy", paste: "Paste" },
+    });
+  })();
 }
 
 app.on("ready", () => {
@@ -77,7 +85,7 @@ ipcMain.handle("run-automation", async (event, args) => {
     } catch (error) {
       console.log(error);
     }
-    return
+    return;
   }
   const response = await fetch("http://localhost:5000/api/automation/run", {
     method: "POST",
