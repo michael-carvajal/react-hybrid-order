@@ -13,6 +13,7 @@
   "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",
+    "electron-context-menu": "^4.0.4",
     "express": "^4.19.2",
     "mssql": "^11.0.1",
     "playwright": "^1.44.1"
