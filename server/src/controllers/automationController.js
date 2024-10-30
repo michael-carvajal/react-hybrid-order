@@ -59,7 +59,6 @@ const runAutomation = async (req, res) => {
 
     const key = deriveKey("juan_rocks_123", "salt", 100000, 32);
     const decryptedValues = decryptHashedValues(hashedData, iv, key);
-
     let response = await orderFromVendor(
       decryptedValues,
       page,
@@ -68,7 +67,7 @@ const runAutomation = async (req, res) => {
       quantity,
       vendor = vendors[vendor],
       poNumber,
-      pickup,
+      pickup  = pickup === "true" ? true : pickup === true ? true : false,
       tireRackAccount
     );
 
