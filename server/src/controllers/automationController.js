@@ -24,16 +24,24 @@ const vendors = {
   "MAX FINKELSTEIN": "MFI",
   "Max Finkelstein": "MFI",
   Finkelstein: "MFI",
-    "USA" : "USA", "MFI" : "MFI"
+  USA: "USA",
+  MFI: "MFI",
 };
 
 const initBrowser = async (vendor) => {
   const isTireRack = vendor === "TIRERACK";
   const browserType = isTireRack ? firefox : chromium;
-  const browserKey = isTireRack ? 'firefox' : 'chromium';
+  const browserKey = isTireRack ? "firefox" : "chromium";
 
   if (!browserInstances[browserKey]) {
-    browserInstances[browserKey] = await browserType.launch({ headless: false });
+    browserInstances[browserKey] = await browserType.launch({
+      headless: false,
+      args: [
+        "--disable-gpu",
+        "--disable-extensions",
+        "--no-sandbox",
+      ],
+    });
   }
   return browserInstances[browserKey];
 };
@@ -65,9 +73,9 @@ const runAutomation = async (req, res) => {
       storeNumber,
       itemNumber,
       quantity,
-      vendor = vendors[vendor],
+      (vendor = vendors[vendor]),
       poNumber,
-      pickup  = pickup === "true" ? true : pickup === true ? true : false,
+      (pickup = pickup === "true" ? true : pickup === true ? true : false),
       tireRackAccount
     );
 
@@ -81,6 +89,5 @@ const runAutomation = async (req, res) => {
     res.json(error);
   }
 };
-
 
 module.exports = { runAutomation };
