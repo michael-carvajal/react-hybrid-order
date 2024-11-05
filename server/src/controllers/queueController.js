@@ -12,6 +12,59 @@ const dbConfig = {
   },
 };
 // Example route to fetch data
+
+// Function to update the decision status
+async function updateDecision(req, res) {
+  const {
+    requestId,
+    status,
+    confirmationNum,
+    deliveryDate,
+    submittedByEmpNum,
+    additionalInfo,
+    unitPrice = 0,
+  } = req.body;
+
+  console.log(
+    requestId,
+    status,
+    confirmationNum,
+    deliveryDate,
+    submittedByEmpNum,
+    additionalInfo,
+    unitPrice
+  );
+
+  return res.json({
+    requestId,
+    status,
+    confirmationNum,
+    deliveryDate,
+    submittedByEmpNum,
+    additionalInfo,
+    unitPrice,
+  });
+  try {
+    const request = new sql.ConnectionPool(dbConfig);
+
+    request.input("RequestId", sql.Int, requestId);
+    request.input("Status", sql.Int, status);
+    request.input("ConfirmationNum", sql.NVarChar, confirmationNum || null);
+    request.input("DeliveryDate", sql.DateTime, deliveryDate || null);
+    request.input("SubmittedByEmpNum", sql.BigInt, submittedByEmpNum || null);
+    request.input("AdditionalInfo", sql.NVarChar, additionalInfo);
+    request.input("UnitPrice", sql.Float, unitPrice);
+
+    await request.execute("sp_SourcingRequestQueue_UpdateDecision");
+
+    console.info(
+      `Database: updated Decision for RequestID ${requestId}, Status=${status}, ConfirmationNum=${confirmationNum}, DeliveryDate=${deliveryDate}, SubmittedByEmpNum=${submittedByEmpNum}, AdditionalInfo=${additionalInfo}`
+    );
+  } catch (error) {
+    console.error("Error updating decision status:", error);
+  }
+}
+
 const fetchQueueData = async (req, res) => {
   try {
     const pool = new ConnectionPool(dbConfig);
@@ -91,4 +144,4 @@ const orderStatus = async (req, res) => {
   }
 };
 
-module.exports = { fetchQueueData, login, orderStatus };
+module.exports = { fetchQueueData, login, orderStatus, updateDecision };
