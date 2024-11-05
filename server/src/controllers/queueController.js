@@ -14,54 +14,62 @@ const dbConfig = {
 // Example route to fetch data
 
 // Function to update the decision status
+// Function to update the decision status
 async function updateDecision(req, res) {
-  const {
-    requestId,
-    status,
-    confirmationNum,
-    deliveryDate,
-    submittedByEmpNum,
-    additionalInfo,
-    unitPrice = 0,
-  } = req.body;
+  const requests = req.body; // Expecting an array of request objects
 
-  console.log(
-    requestId,
-    status,
-    confirmationNum,
-    deliveryDate,
-    submittedByEmpNum,
-    additionalInfo,
-    unitPrice
-  );
+  if (!Array.isArray(requests) || requests.length === 0) {
+    return res.status(400).json({ message: "Invalid or empty request array." });
+  }
 
-  return res.json({
-    requestId,
-    status,
-    confirmationNum,
-    deliveryDate,
-    submittedByEmpNum,
-    additionalInfo,
-    unitPrice,
-  });
   try {
-    const request = new sql.ConnectionPool(dbConfig);
+    // Create a new SQL connection pool
+    const pool = new ConnectionPool(dbConfig);
 
-    request.input("RequestId", sql.Int, requestId);
-    request.input("Status", sql.Int, status);
-    request.input("ConfirmationNum", sql.NVarChar, confirmationNum || null);
-    request.input("DeliveryDate", sql.DateTime, deliveryDate || null);
-    request.input("SubmittedByEmpNum", sql.BigInt, submittedByEmpNum || null);
-    request.input("AdditionalInfo", sql.NVarChar, additionalInfo);
-    request.input("UnitPrice", sql.Float, unitPrice);
+    for (const requestData of requests) {
+      const {
+        requestId,
+        status,
+        confirmationNum,
+        deliveryDate,
+        submittedByEmpNum,
+        additionalInfo,
+        unitPrice,
+      } = requestData;
+      console.log(requestData);
+      continue;
 
-    await request.execute("sp_SourcingRequestQueue_UpdateDecision");
+      // Prepare the request for each entry
+      const dbRequest = pool.request();
+      dbRequest.input("RequestId", sql.Int, requestId);
+      dbRequest.input("Status", sql.Int, status);
+      dbRequest.input("ConfirmationNum", sql.NVarChar, confirmationNum || null);
+      dbRequest.input("DeliveryDate", sql.DateTime, deliveryDate || null);
+      dbRequest.input(
+        "SubmittedByEmpNum",
+        sql.BigInt,
+        submittedByEmpNum || null
+      );
+      dbRequest.input("AdditionalInfo", sql.NVarChar, additionalInfo);
+      dbRequest.input("UnitPrice", sql.Float, unitPrice);
 
-    console.info(
-      `Database: updated Decision for RequestID ${requestId}, Status=${status}, ConfirmationNum=${confirmationNum}, DeliveryDate=${deliveryDate}, SubmittedByEmpNum=${submittedByEmpNum}, AdditionalInfo=${additionalInfo}`
-    );
+      // Execute the stored procedure for each request
+      await dbRequest.execute("sp_SourcingRequestQueue_UpdateDecision");
+
+      console.info(
+        `Database: updated Decision for RequestID ${requestId}, Status=${status}, ConfirmationNum=${confirmationNum}, DeliveryDate=${deliveryDate}, SubmittedByEmpNum=${submittedByEmpNum}, AdditionalInfo=${additionalInfo}`
+      );
+    }
+
+    res.status(200).json({ message: "Decisions updated successfully." });
   } catch (error) {
     console.error("Error updating decision status:", error);
+    res.status(500).json({
+      message: "Error updating decision status.",
+      error: error.message,
+    });
+  } finally {
+    sql.close(); // Close the connection pool to release resources
   }
 }
 
