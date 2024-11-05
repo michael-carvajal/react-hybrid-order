@@ -11,6 +11,14 @@ const dbConfig = {
     trustServerCertificate: true, // set true for self-signed certificates
   },
 };
+
+const DecisionStatus = {
+  New: 0,
+  Decided: 1,
+  Submitted: 2,
+  Success: 3, //ordered
+  Problem: 4,
+};
 // Example route to fetch data
 
 // Function to update the decision status
@@ -24,40 +32,53 @@ async function updateDecision(req, res) {
 
   try {
     // Create a new SQL connection pool
-    const pool = new ConnectionPool(dbConfig);
+    const pool = await sql.connect(dbConfig);
 
     for (const requestData of requests) {
-      const {
-        requestId,
-        status,
-        confirmationNum,
-        deliveryDate,
-        submittedByEmpNum,
-        additionalInfo,
-        unitPrice,
-      } = requestData;
-      console.log(requestData);
-      continue;
+      const dataFormatted = {
+        requestId: requestData.id,
+        status: DecisionStatus.Submitted,
+        submittedByEmpNum: Number(requestData.employeeNumber),
+        additionalInfo: requestData.additionalInfo,
+        unitPrice: requestData.unitPrice || 0,
+      };
+      console.log(dataFormatted);
 
       // Prepare the request for each entry
       const dbRequest = pool.request();
-      dbRequest.input("RequestId", sql.Int, requestId);
-      dbRequest.input("Status", sql.Int, status);
-      dbRequest.input("ConfirmationNum", sql.NVarChar, confirmationNum || null);
-      dbRequest.input("DeliveryDate", sql.DateTime, deliveryDate || null);
+      console.log('post dbRequest init');
+      
+      dbRequest.input("RequestId", sql.Int, dataFormatted.requestId);
+      dbRequest.input("Status", sql.Int, dataFormatted.status);
+      dbRequest.input(
+        "ConfirmationNum",
+        sql.NVarChar,
+        dataFormatted.confirmationNum || null
+      );
+      dbRequest.input(
+        "DeliveryDate",
+        sql.DateTime,
+        dataFormatted.deliveryDate || null
+      );
       dbRequest.input(
         "SubmittedByEmpNum",
         sql.BigInt,
-        submittedByEmpNum || null
+        dataFormatted.submittedByEmpNum || null
       );
-      dbRequest.input("AdditionalInfo", sql.NVarChar, additionalInfo);
-      dbRequest.input("UnitPrice", sql.Float, unitPrice);
-
+      dbRequest.input(
+        "AdditionalInfo",
+        sql.NVarChar,
+        dataFormatted.additionalInfo
+      );
+      dbRequest.input("UnitPrice", sql.Float, dataFormatted.unitPrice);
+      
+      console.log('post data input');
       // Execute the stored procedure for each request
       await dbRequest.execute("sp_SourcingRequestQueue_UpdateDecision");
-
+      console.log('post data executuin');
+      
       console.info(
-        `Database: updated Decision for RequestID ${requestId}, Status=${status}, ConfirmationNum=${confirmationNum}, DeliveryDate=${deliveryDate}, SubmittedByEmpNum=${submittedByEmpNum}, AdditionalInfo=${additionalInfo}`
+        `Database: updated Decision for RequestID ${dataFormatted.requestId}, Status=${dataFormatted.status}, ConfirmationNum=${dataFormatted.confirmationNum}, DeliveryDate=${dataFormatted.deliveryDate}, SubmittedByEmpNum=${dataFormatted.submittedByEmpNum}, AdditionalInfo=${dataFormatted.additionalInfo}`
       );
     }
 
