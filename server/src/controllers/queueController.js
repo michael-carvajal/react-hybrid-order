@@ -11,7 +11,89 @@ const dbConfig = {
     trustServerCertificate: true, // set true for self-signed certificates
   },
 };
+
+const DecisionStatus = {
+  New: 0,
+  Decided: 1,
+  Submitted: 2,
+  Success: 3, //ordered
+  Problem: 4,
+};
 // Example route to fetch data
+
+// Function to update the decision status
+// Function to update the decision status
+async function updateDecision(req, res) {
+  const requests = req.body; // Expecting an array of request objects
+
+  if (!Array.isArray(requests) || requests.length === 0) {
+    return res.status(400).json({ message: "Invalid or empty request array." });
+  }
+
+  try {
+    // Create a new SQL connection pool
+    const pool = await sql.connect(dbConfig);
+
+    for (const requestData of requests) {
+      const dataFormatted = {
+        requestId: requestData.id,
+        status: DecisionStatus.Submitted,
+        submittedByEmpNum: Number(requestData.employeeNumber),
+        additionalInfo: requestData.additionalInfo,
+        unitPrice: requestData.unitPrice || 0,
+      };
+      console.log(dataFormatted);
+
+      // Prepare the request for each entry
+      const dbRequest = pool.request();
+      console.log('post dbRequest init');
+      
+      dbRequest.input("RequestId", sql.Int, dataFormatted.requestId);
+      dbRequest.input("Status", sql.Int, dataFormatted.status);
+      dbRequest.input(
+        "ConfirmationNum",
+        sql.NVarChar,
+        dataFormatted.confirmationNum || null
+      );
+      dbRequest.input(
+        "DeliveryDate",
+        sql.DateTime,
+        dataFormatted.deliveryDate || null
+      );
+      dbRequest.input(
+        "SubmittedByEmpNum",
+        sql.BigInt,
+        dataFormatted.submittedByEmpNum || null
+      );
+      dbRequest.input(
+        "AdditionalInfo",
+        sql.NVarChar,
+        dataFormatted.additionalInfo
+      );
+      dbRequest.input("UnitPrice", sql.Float, dataFormatted.unitPrice);
+      
+      console.log('post data input');
+      // Execute the stored procedure for each request
+      await dbRequest.execute("sp_SourcingRequestQueue_UpdateDecision");
+      console.log('post data executuin');
+      
+      console.info(
+        `Database: updated Decision for RequestID ${dataFormatted.requestId}, Status=${dataFormatted.status}, ConfirmationNum=${dataFormatted.confirmationNum}, DeliveryDate=${dataFormatted.deliveryDate}, SubmittedByEmpNum=${dataFormatted.submittedByEmpNum}, AdditionalInfo=${dataFormatted.additionalInfo}`
+      );
+    }
+
+    res.status(200).json({ message: "Decisions updated successfully." });
+  } catch (error) {
+    console.error("Error updating decision status:", error);
+    res.status(500).json({
+      message: "Error updating decision status.",
+      error: error.message,
+    });
+  } finally {
+    sql.close(); // Close the connection pool to release resources
+  }
+}
+
 const fetchQueueData = async (req, res) => {
   try {
     const pool = new ConnectionPool(dbConfig);
@@ -91,4 +173,4 @@ const orderStatus = async (req, res) => {
   }
 };
 
-module.exports = { fetchQueueData, login, orderStatus };
+module.exports = { fetchQueueData, login, orderStatus, updateDecision };
