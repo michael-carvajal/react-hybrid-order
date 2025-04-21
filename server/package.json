@@ -1,6 +1,6 @@
 {
   "name": "hybrid_order_server",
-  "version": "3.2.5",
+  "version": "3.3.0",
   "description": "",
   "main": "main.js",
   "scripts": {
@@ -23,6 +23,7 @@
     "electron-builder": "^25.1.8"
   },
   "build": {
+    "compression": "store",
     "appId": "com.hybridOrderServer.id",
     "productName": "Hybrid Order Server",
     "icon": "src/images/icon.png",
