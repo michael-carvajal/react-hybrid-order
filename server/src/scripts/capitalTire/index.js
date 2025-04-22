@@ -1,3 +1,5 @@
+const capitalTireShipToMap = require("./getStoreShipToNumber");
+
 async function login(username, password, page) {
     await page.getByRole('textbox', { name: 'Username' }).click();
     await page.getByRole('textbox', { name: 'Username' }).fill(username);
@@ -6,7 +8,10 @@ async function login(username, password, page) {
     await page.keyboard.press('Enter');
 }
 
-
+async function chooseStore(storeNumber, page) {
+    const shipToNumber = capitalTireShipToMap[storeNumber];
+    await page.getByText(shipToNumber).click()
+}
 
 async function orderFromCapitalTire(
     page,
@@ -21,7 +26,7 @@ async function orderFromCapitalTire(
   ){
     await page.goto(url);
     await login(username, password, page);
-
+    await chooseStore(storeNumber, page);
   }
 
   module.exports = orderFromCapitalTire;    
