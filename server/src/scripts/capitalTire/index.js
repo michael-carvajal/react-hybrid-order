@@ -27,6 +27,19 @@ async function orderFromCapitalTire(
     await page.goto(url);
     await login(username, password, page);
     await chooseStore(storeNumber, page);
+    await page.locator('#WholesalePowerSearch').fill(itemNumber);
+    await page.keyboard.press('Enter');
+    
+    await page.getByRole('button', {name : 'Order'}).click();
+    for (let i = 0; i < quantity; i++) {
+        await page.getByText('+', { exact: true }).click();
+    }
+    await page.locator('#viewcartmodal').click();
+    await page.locator('#Ep2OrderCustomerPoNumber').fill(poNumber);
+    
+    if (pickup) {
+        await page.locator('#Ep2OrderShipViaPICKUP').click();
+    }
   }
 
   module.exports = orderFromCapitalTire;    
