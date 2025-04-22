@@ -1,13 +1,13 @@
 {
   "name": "hybrid_order_server",
-  "version": "3.3.0",
+  "version": "3.5.0",
   "description": "",
   "main": "main.js",
   "scripts": {
     "start": "node app.js",
     "electron": "electron .",
     "build": "electron-builder",
-    "codegen" : "npx playwright codegen https://capitaltire.net/Wholesale/login"
+    "codegen" : "npx playwright codegen https://www.tirelink-td.com/login-user/"
   },
   "keywords": [],
   "author": "",
