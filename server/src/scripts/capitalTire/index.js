@@ -26,6 +26,7 @@ async function orderFromCapitalTire(
   ){
     await page.goto(url);
     await login(username, password, page);
+    // TODO : clear cart if already an order
     await chooseStore(storeNumber, page);
     await page.locator('#WholesalePowerSearch').fill(itemNumber);
     await page.keyboard.press('Enter');
