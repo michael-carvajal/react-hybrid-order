@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node app.js",
     "electron": "electron .",
-    "build": "electron-builder"
+    "build": "electron-builder",
+    "codegen" : "npx playwright codegen https://capitaltire.net/Wholesale/login"
   },
   "keywords": [],
   "author": "",

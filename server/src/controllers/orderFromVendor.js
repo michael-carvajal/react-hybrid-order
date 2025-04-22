@@ -5,6 +5,7 @@ const orderFromNTW = require("../scripts/ntw");
 const orderFromTirehub = require("../scripts/tirehub");
 const orderFromKAndM = require("../scripts/kandm");
 const orderFromTireRack = require("../scripts/tirerack");
+const orderFromCapitalTire = require("../scripts/capitalTire")
 
 
 const orderFromVendor = async (
@@ -145,6 +146,26 @@ try {
         poNumber,
         pickup
       );
+      break;
+    case "CAPITAL TIRE":
+      websiteUrl = decryptedValues.CAPITAL_TIRE_URL;
+      username = decryptedValues.CAPITAL_TIRE_USERNAME;
+      password = decryptedValues.CAPITAL_TIRE_PASSWORD;
+      await orderFromCapitalTire(
+        page,
+        websiteUrl,
+        storeNumber,
+        itemNumber,
+        quantity,
+        username,
+        password,
+        poNumber,
+        pickup
+      );
+      break;
+    case "STM":
+      break;
+    case "TDG":
       break;
     default:
       console.log("Invalid vendor. Please choose either 'ATD' or 'other'.");
