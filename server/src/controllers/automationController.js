@@ -26,6 +26,12 @@ const vendors = {
   Finkelstein: "MFI",
   USA: "USA",
   MFI: "MFI",
+  "Capital Tire": "Capital Tire",
+  TDG: "TDG",
+  "Tire Distributors of Georgia": "TDG",
+  STM : "STM",
+  "Southern Tire" : "STM",
+  "Southern Tire Mart" : "STM",
 };
 
 const initBrowser = async (vendor) => {
@@ -67,6 +73,8 @@ const runAutomation = async (req, res) => {
 
     const key = deriveKey("juan_rocks_123", "salt", 100000, 32);
     const decryptedValues = decryptHashedValues(hashedData, iv, key);
+    console.log("decrypted values ======>   " , decryptedValues);
+    
     let response = await orderFromVendor(
       decryptedValues,
       page,
