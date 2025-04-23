@@ -168,6 +168,7 @@ try {
       break;
       case "TDG":
       websiteUrl = decryptedValues.TDG_URL;
+      password = decryptedValues.TDG_PASSWORD;
       await orderFromTDG(
         page,
         websiteUrl,

@@ -13,9 +13,9 @@ async function orderFromTDG(
   ){
     await page.goto(url);
     await page.locator('input[name="customer_id"]').click();
-    await page.locator('input[name="customer_id"]').fill('500531');
+    await page.locator('input[name="customer_id"]').fill("MAVIS" + storeNumber);
     await page.locator('#login-pass').click();
-    await page.locator('#login-pass').fill('M@vi$T!r3');
+    await page.locator('#login-pass').fill(password);
     await page.locator('#login-btn').click();
   }
 
