@@ -7,6 +7,7 @@ const orderFromKAndM = require("../scripts/kandm");
 const orderFromTireRack = require("../scripts/tirerack");
 const orderFromCapitalTire = require("../scripts/capitalTire");
 const orderFromTDG = require("../scripts/tdg");
+const orderFromSTM = require("../scripts/stm");
 
 
 const orderFromVendor = async (
@@ -165,6 +166,19 @@ try {
       );
       break;
       case "STM":
+        websiteUrl = decryptedValues.STM_URL;
+        password = decryptedValues.STM_PASSWORD;
+        await orderFromSTM(
+          page,
+          websiteUrl,
+          storeNumber,
+          itemNumber,
+          quantity,
+          username,
+          password,
+          poNumber,
+          pickup
+        );  
       break;
       case "TDG":
       websiteUrl = decryptedValues.TDG_URL;
